@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Chip, createTheme, ThemeProvider } from "@mui/material";
 import './App.css';
 import styled from '@emotion/styled';
@@ -14,7 +14,7 @@ const theme = createTheme({
 	palette: {
 		secondary: {
 			main: 'hsl(180, 31%, 95%)',
-			contrastText:'hsl(180, 14%, 20%)'
+			contrastText: 'hsl(180, 14%, 20%)'
 		},
 		primary: {
 			main: 'hsl(180, 29%, 50%)',
@@ -175,7 +175,7 @@ const SkillChip = styled.div({
 })
 
 
-const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contract, location, skills,searchTokens,setSearchTokens }: {
+const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contract, location, skills, searchTokens, setSearchTokens }: {
 	icon: JSX.Element | ReactNode,
 	companyName: string,
 	isNew: boolean,
@@ -186,7 +186,7 @@ const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contra
 	location: string,
 	skills: string[],
 	searchTokens?: string[] | never[],
-	setSearchTokens?:(arg:any)=>void
+	setSearchTokens?: (arg: any) => void
 }) => {
 	return (
 		<FlexCard className={isFeatured ? css({
@@ -276,9 +276,9 @@ const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contra
 
 				{skills.map(each => {
 					return (
-						<SkillChip onClick={() => {							
-							if (setSearchTokens && searchTokens  ) {
-								setSearchTokens([...searchTokens,each])
+						<SkillChip onClick={() => {
+							if (setSearchTokens && searchTokens) {
+								setSearchTokens([...searchTokens, each])
 							}
 						}} >
 							{each}
@@ -294,7 +294,7 @@ const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contra
 
 const SearchBar = ({ searchable, setSearchable }: {
 	searchable: string[],
-	setSearchable:(a:any)=>void
+	setSearchable: (a: any) => void
 }) => {
 
 	const SearchBar = styled.div({
@@ -369,14 +369,33 @@ const SearchBar = ({ searchable, setSearchable }: {
 function App() {
 
 	const [searchItems, setSearchItems] = useState([])
-
-	var filteredJobListingData = jobListingData.filter(each => {
-		return(
-			searchItems.some(it => [...each.languages, ...each.tools].includes(it))
-		)
-	})
+	const [jobListingArray, setJobListingArray] = useState(jobListingData)
 
 	
+
+	
+	useEffect(() => {
+		if (searchItems.length !== 0) {
+			var filteredJobListingData = jobListingData.filter(each => {
+				return (
+					searchItems.some(it => [...each.languages, ...each.tools].includes(it))
+				)
+			})
+			setJobListingArray(filteredJobListingData)
+			
+		}
+		else {
+			setJobListingArray(jobListingData)
+		}
+
+
+		return () => {
+
+		}
+	}, [searchItems])
+
+
+
 
 
 	return (
@@ -390,7 +409,7 @@ function App() {
 				<FlexColoum>
 					<SearchBar searchable={searchItems} setSearchable={setSearchItems} />
 
-					{jobListingData.map(eachItem => {
+					{jobListingArray.map(eachItem => {
 						return (
 
 							<Card
@@ -404,7 +423,7 @@ function App() {
 								location={eachItem.location}
 								postedAt={eachItem.postedAt}
 								skills={[...eachItem.languages, ...eachItem.tools]}
-								searchTokens={searchItems }
+								searchTokens={searchItems}
 								setSearchTokens={setSearchItems}
 
 							/>

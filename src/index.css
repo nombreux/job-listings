@@ -4,6 +4,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color:  hsl(180, 52%, 96%);
+  /* font-family: 'League Spartan', sans-serif; */
 }
 
 code {
