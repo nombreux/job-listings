@@ -409,8 +409,10 @@ function App() {
 			</header>
 			<ThemeProvider theme={theme}>
 				<FlexColoum>
-					<SearchBar searchable={searchItems} setSearchable={setSearchItems} />
-
+					{searchItems.length !== 0 ?
+						<SearchBar searchable={searchItems} setSearchable={setSearchItems} />
+						:null
+					}
 					{jobListingArray.map(eachItem => {
 						return (
 
