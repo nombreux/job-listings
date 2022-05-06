@@ -185,7 +185,7 @@ const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contra
 	contract: string,
 	location: string,
 	skills: string[],
-	searchTokens?: string[] | never[],
+	searchTokens?: string[] | any,
 	setSearchTokens?: (arg: any) => void
 }) => {
 	return (
@@ -278,7 +278,9 @@ const Card = ({ icon, companyName, isNew, isFeatured, jobTitle, postedAt, contra
 					return (
 						<SkillChip onClick={() => {
 							if (setSearchTokens && searchTokens) {
-								setSearchTokens([...searchTokens, each])
+								if (!(searchTokens.includes(each))) {									
+									setSearchTokens([...searchTokens, each])
+								}
 							}
 						}} >
 							{each}
